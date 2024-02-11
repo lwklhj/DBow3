@@ -10,12 +10,17 @@
 #ifndef __D_T_BOW_VECTOR__
 #define __D_T_BOW_VECTOR__
 
+#include <iostream>
 #include <map>
 #include <vector>
 #include "exports.h"
 #if _WIN32
 #include <cstdint>
 #endif
+
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/map.hpp>
+
 namespace DBoW3 {
 
 /// Id of words
@@ -58,6 +63,13 @@ enum ScoringType
 class DBOW_API BowVector:
 	public std::map<WordId, WordValue>
 {
+	friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive& ar, const int version)
+    {
+        ar & boost::serialization::base_object<std::map<WordId, WordValue> >(*this);
+    }
+
 public:
 
 	/** 
